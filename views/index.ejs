@@ -1,5 +1,25 @@
 <%- include ('partials/header.ejs')%>
 <body>
-    <h1>Testando a view</h1>
+    <%- include ('partials/homenavbar.ejs')%>
+    <div class="container">
+        <hr>
+        <div class="jumbotron">
+            <h1 class="display-8">Bem vindo!</h1>
+            <p class="lead">Este é o blog GuiaPress!</p>
+            <hr class="my-6">
+            <p>Blog feito para conter categorias e artigos sobre programação.</p>
+          </div>
+          <div class="card">
+            <% articles.forEach(article => { %>
+                <div class="card-header">
+                    <h2><%= article.title %></h2>
+                </div>
+                <div class="card-body">
+                    <a href="/<%= article.slug %>" class="btn btn-success">Clique para saber mais!</a>
+                </div>
+            <% }) %>
+          </div>
+    </div>
+    
 </body>
 <%- include ('partials/footer.ejs')%>

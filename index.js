@@ -32,5 +32,26 @@ app.use(categoriesController)
 //Conectando ao articlesController (Rotas)
 app.use(articlesController)
 
+//Rota pagina principal
+app.get("/", (req, res) => {
+    Article.findAll().then(articles => {
+        res.render('index', {
+            articles: articles
+        })
+    })
+})
+
+app.get("/:slug", (req, res) => {
+    const slug = req.params.slug
+
+    Article.findOne({
+        where: {slug: slug}
+    }).then(article => {
+        console.log(article)
+        res.render("article", {article: article})
+    })
+})
+    
+
 //Iniciando o servidor na porta 3000
 app.listen(3000, console.log("Servidor iniciado!"))

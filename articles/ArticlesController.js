@@ -4,10 +4,16 @@ const Article = require("../articles/models/Article")
 const slugify = require("slugify")
 const Category = require("../categories/models/Category")
 
-//ROTAS ARTICLES
 
+//ROTAS ARTICLES
 router.get("/admin/articles", (req, res)=>{
-    res.render("admin/articles")
+    Article.findAll({
+        include: [{model: Category}]
+    }).then(articles => {
+        res.render("admin/articles", {
+            articles: articles
+        })
+    })
 })
 
 router.get("/admin/articles/new", (req, res) => {
@@ -30,6 +36,19 @@ router.post("/articles/save", (req,res) =>{
     }).then(()=>{
         res.redirect("/admin/articles")
     })
+})
+
+router.post("/admin/articles/delete", (req, res) => {
+    const id = req.body.id
+    if(!isNaN(id)){
+        Article.destroy({
+            where: {id: id}
+        }).then(()=>{
+            res.redirect("/admin/articles")
+        })
+    } else {
+        res.redirect("/admin/articles")
+    }
 })
 
 module.exports = router
