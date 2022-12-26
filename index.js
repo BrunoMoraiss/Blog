@@ -34,9 +34,13 @@ app.use(articlesController)
 
 //Rota pagina principal
 app.get("/", (req, res) => {
-    Article.findAll().then(articles => {
-        res.render('index', {
-            articles: articles
+    Article.findAll({
+        order:[
+            ["id","DESC"]
+        ] 
+    }).then(articles => {
+        Category.findAll().then(categories => {
+            res.render('index', {articles: articles, categories: categories})
         })
     })
 })
@@ -46,12 +50,29 @@ app.get("/:slug", (req, res) => {
 
     Article.findOne({
         where: {slug: slug}
-    }).then(article => {
-        console.log(article)
-        res.render("article", {article: article})
+    }).then((articles) => {
+        Category.findAll().then(categories => {
+            res.render("article", {articles: articles, categories: categories})
+        })
+    })
+})
+
+app.get("/category/:slug", (req, res) => {
+    const slug = req.params.slug
+
+    Category.findOne({
+        where: {slug: slug},
+        include: [{model: Article}]
+    }).then(category => {
+        Category.findAll().then(categories => {
+            res.render("index", {articles: category.articles, categories: categories})
+            console.log(category.articles)
+        })
     })
 })
     
+
+
 
 //Iniciando o servidor na porta 3000
 app.listen(3000, console.log("Servidor iniciado!"))

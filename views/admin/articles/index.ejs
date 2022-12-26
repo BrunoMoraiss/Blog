@@ -25,6 +25,10 @@
                     <td> <%= article.slug %> </td>
                     <td> <%= article.category.title %> </td>
                     <td> 
+                        <form method="post" action="/admin/articles/edit/<%= article.id %>" style="display: inline;">
+                            <input type="hidden" name="id" value="<%= article.id %>">
+                            <button class="btn btn-warning" id="btnDelete">Editar</button>
+                        </form>
                         <form method="post" action="/admin/articles/delete" style="display: inline;" onsubmit="confirmDelete(event)">
                             <input type="hidden" name="id" value="<%= article.id %>">
                             <button class="btn btn-danger" id="btnDelete">Deletar</button>

@@ -51,4 +51,33 @@ router.post("/admin/articles/delete", (req, res) => {
     }
 })
 
+router.post("/admin/articles/edit/:id", (req, res) => {
+    const id = req.params.id
+
+    Article.findOne({
+        where: {id: id},
+        include: [{model: Category}]
+    }).then(article => {
+        res.render("admin/articles/edit", {article: article, category: article.category})
+    })
+})
+
+router.post("/articles/update", (req, res) => {
+    const title = req.body.title
+    const body = req.body.body
+    const id = Number(req.body.id)
+
+    Article.update({title: title, slug: slugify(title) , body: body}, {
+        where: {
+            id: id
+        }
+    }).then(()=>{
+        res.redirect("/admin/articles")
+    }).catch((error) => {
+        res.redirect("/")
+    })
+})
+
+
+
 module.exports = router
