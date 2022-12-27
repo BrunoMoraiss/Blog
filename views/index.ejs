@@ -15,12 +15,18 @@
                     <h2><%= article.title %></h2>
                 </div>
                 <div class="card-body">
-                    <a href="/<%= article.slug %>" class="btn btn-success">Clique para saber mais!</a>
+                    <a href="/<%= article.slug %>" class="btn btn-success">Ler artigo!</a>
                 </div>
             </div>
             <br>
         <% }) %>
+        <div class="row">
+            <div class="col col-12">
+                <a class="btn - btn-success" style="float: right;" href="/articles/page/2">NEXT</a>
+            </div>
+            <br>
+        </div>
+        <br>
     </div>
-    
 </body>
 <%- include ('partials/footer.ejs')%>

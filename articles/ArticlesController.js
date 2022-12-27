@@ -4,7 +4,6 @@ const Article = require("../articles/models/Article")
 const slugify = require("slugify")
 const Category = require("../categories/models/Category")
 
-
 //ROTAS ARTICLES
 router.get("/admin/articles", (req, res)=>{
     Article.findAll({
@@ -75,6 +74,47 @@ router.post("/articles/update", (req, res) => {
         res.redirect("/admin/articles")
     }).catch((error) => {
         res.redirect("/")
+    })
+})
+
+router.get("/articles/page/:num", (req, res) => {
+    const page = req.params.num
+    let offset = 0
+
+    if(isNaN(page) || page == 1){
+        offset = 0
+    } else {
+        offset = 4 * (parseInt(page) - 1)
+    }
+
+    Article.findAndCountAll({
+        limit: 4,
+        offset: offset,
+        order: [
+            ['id', 'DESC']
+        ]
+    }).then(articles =>{
+
+        let next
+
+        if(offset + 4 >= articles.count){
+            next = false
+        } else {
+            next = true
+        }
+
+        let result = {
+            next : next,
+            articles: articles
+        }
+
+        Category.findAll().then(categories => {
+            res.render("admin/articles/page", {
+                page: Number(page),
+                result: result,
+                categories: categories
+            })
+        })
     })
 })
 

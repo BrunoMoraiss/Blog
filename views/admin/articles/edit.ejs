@@ -13,7 +13,7 @@
                 <form method="post" action="/articles/update">
                     <input type="hidden" name="id" value="<%= article.id %>">
                     <input class="form-control" type="text" id="name" name="title" placeholder="Defina o titulo do artigo" value="<%= article.title %>"><br>
-                    <textarea class="form-control" name="body" placeholder="Descreva o artigo aqui" id="article" value="<%- article.body %>"></textarea><br>
+                    <textarea class="form-control" name="body" placeholder="Descreva o artigo aqui" id="article"></textarea><br>
                     <label>Categoria</label>
                     <select name="category" class="form-control">
                             <option value="<%= category.id %>"> <%= category.title %> </option>
@@ -25,6 +25,10 @@
     </div>
 </body>
 
+<div id="content" style="display: none;">
+    <%- article.body %>
+</div>
+
 <%- include ('../../partials/footer.ejs')%>
 
 <script src="/tinymce/tinymce.min.js"></script>
@@ -32,6 +36,9 @@
     tinymce.init({
         language:"pt_BR",
         selector: "#article",
-        plugins: ['table', 'code', 'advtable', 'lists advlist', 'image', 'link', 'autolink', 'print', 'preview', 'hr', 'searchreplace', 'wordcount', 'fullscreen', 'insertdatetime', 'media', 'save'] 
+        plugins: ['table', 'code', 'advtable', 'lists advlist', 'image', 'link', 'autolink', 'print', 'preview', 'hr', 'searchreplace', 'wordcount', 'fullscreen', 'insertdatetime', 'media', 'save'],
+        init_instance_callback: () => {
+            tinymce.get("article").setContent($("#content").html())
+        }
     })
 </script>
