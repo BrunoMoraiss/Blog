@@ -5,9 +5,11 @@ const connection = require("./database/database")
 //Importando Rotas
 const categoriesController = require("./categories/CategoriesController")
 const articlesController = require("./articles/ArticlesController")
+const UsersController = require("./user/UsersController")
 //Importando models (Article e Category)
 const Article = require("./articles/models/Article")
 const Category = require("./categories/models/Category")
+const User = require("./user/models/User")
 
 //View Engine
 app.set('view engine', 'ejs')
@@ -31,6 +33,9 @@ app.use(categoriesController)
 
 //Conectando ao articlesController (Rotas)
 app.use(articlesController)
+
+//Conectando ao userController (Rotas)
+app.use(UsersController)
 
 //Rota pagina principal
 app.get("/", (req, res) => {
