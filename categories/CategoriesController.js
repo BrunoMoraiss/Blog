@@ -4,12 +4,14 @@ const router = express.Router()
 const Category = require("./models/Category")
 //Importando biblioteca slugify
 const slugify = require("slugify")
+//Importando middleware de autenticação
+const adminAuth = require("../middlewares/adminAuth")
 
-router.get("/admin/categories/new", (req, res) => {
+router.get("/admin/categories/new", adminAuth, (req, res) => {
     res.render("admin/categories/new")
 })
 
-router.post("/categories/save", (req, res) => {
+router.post("/categories/save", adminAuth, (req, res) => {
     const title = req.body.title
     if(title !== ""){
         Category.create({
@@ -22,7 +24,7 @@ router.post("/categories/save", (req, res) => {
     }
 })
 
-router.get("/admin/categories", (req, res) => {
+router.get("/admin/categories", adminAuth, (req, res) => {
     Category.findAll({
         raw: true
     }).then(category => {
@@ -32,7 +34,7 @@ router.get("/admin/categories", (req, res) => {
     })
 })
 
-router.post("/admin/categories/delete", (req, res) => {
+router.post("/admin/categories/delete", adminAuth, (req, res) => {
     const id = req.body.id
     if(!isNaN(id)){
         Category.destroy({
@@ -45,7 +47,7 @@ router.post("/admin/categories/delete", (req, res) => {
     }
 })
 
-router.get("/admin/categories/edit/:id", (req, res) => {
+router.get("/admin/categories/edit/:id", adminAuth, (req, res) => {
     const id = Number(req.params.id)
 
     if(isNaN(id)){
@@ -65,7 +67,7 @@ router.get("/admin/categories/edit/:id", (req, res) => {
     })
 })
 
-router.post("/categories/update", (req, res) => {
+router.post("/categories/update", adminAuth, (req, res) => {
     const id = Number(req.body.id)
     const title = req.body.title
 

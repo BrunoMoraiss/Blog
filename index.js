@@ -2,6 +2,8 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const connection = require("./database/database")
+//Importando express-session
+const session = require("express-session")
 //Importando Rotas
 const categoriesController = require("./categories/CategoriesController")
 const articlesController = require("./articles/ArticlesController")
@@ -20,6 +22,12 @@ app.use(bodyParser.json())
 
 //Static
 app.use(express.static('public'))
+
+//Utilizando express-session
+app.use(session({
+    secret: 'asjkfhigrebkdabjkwbkdaj',
+    cookie: {maxAge: 43200000}
+}))
 
 //Conectando ao database
 connection.authenticate().then(() => {
@@ -57,9 +65,14 @@ app.get("/:slug", (req, res) => {
     Article.findOne({
         where: {slug: slug}
     }).then((articles) => {
-        Category.findAll().then(categories => {
-            res.render("article", {articles: articles, categories: categories})
-        })
+        if(articles == undefined){
+            res.redirect("/")
+        } else {
+            Category.findAll().then(categories => {
+                res.render("article", {articles: articles, categories: categories})
+            })
+        }
+        
     })
 })
 
@@ -72,7 +85,6 @@ app.get("/category/:slug", (req, res) => {
     }).then(category => {
         Category.findAll().then(categories => {
             res.render("index", {articles: category.articles, categories: categories})
-            console.log(category.articles)
         })
     })
 })
